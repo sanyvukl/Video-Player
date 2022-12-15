@@ -9,18 +9,17 @@ window.onload = () => {
   const volumeBar = document.querySelector(".volume-bar");
 
   const playerSpeed = document.querySelector(".player-speed");
-  
+
   const timeDuration = document.querySelector(".time-duration");
   const timeElapsed = document.querySelector(".time-elapsed");
-  
+
   const progresRange = document.querySelector(".progress-range");
   const progresBar = document.querySelector(".progress-bar");
-  
+
   const fullScreenButton = document.querySelector("#fullscreen");
-  
+
   const videoInput = document.querySelector(".videoInput");
   const findButton = document.querySelector(".findButton");
-
 
   const muteVideo = () => {
     video.volume = 0;
@@ -41,6 +40,7 @@ window.onload = () => {
       muteVideo();
     }
   };
+
   const playVideo = () => {
     video.play();
     playButton.setAttribute("title", "Pause");
@@ -51,6 +51,7 @@ window.onload = () => {
     playButton.setAttribute("title", "Play");
     playButton.classList.replace("fa-pause", "fa-play");
   };
+
   const toggleVideo = () => {
     if (!video.paused) {
       pauseVideo();
@@ -58,6 +59,7 @@ window.onload = () => {
       playVideo();
     }
   };
+
   const updateProgressLine = () => {
     const progressLineLevel = (video.currentTime / video.duration) * 100;
     progresBar.style.width = `${progressLineLevel}%`;
@@ -116,6 +118,7 @@ window.onload = () => {
   //   }
   // };
   // progresRange.addEventListener("click", updateProggresByClick);
+
   let isFullScreen = false;
   const openFullScreen = () => {
     if (player.requestFullscreen) {
@@ -130,7 +133,9 @@ window.onload = () => {
       /* Internet Explorer/Edge */
       player.msRequestFullscreen();
     }
-    video.classList.add("video-fullscreen"); 
+    video.classList.add("video-fullscreen");
+    fullScreenButton.classList.replace("fa-expand", "fa-compress");
+    fullScreenButton.setAttribute("title", "Compress");
   };
   const closeFullScreen = () => {
     if (document.exitFullscreen) {
@@ -146,20 +151,36 @@ window.onload = () => {
       document.msExitFullscreen();
     }
     video.classList.remove("video-fullscreen");
+
+    fullScreenButton.classList.replace("fa-compress", "fa-expand");
+    fullScreenButton.setAttribute("title", "Expand");
+    isFullScreen = !isFullScreen;
   };
-  const toggleFullScreen = () =>{
-    if(isFullScreen){
+  const toggleFullScreen = () => {
+    if (isFullScreen) {
       closeFullScreen();
-      fullScreenButton.classList.replace("fa-compress","fa-expand");
-      fullScreenButton.setAttribute("title", "Expand");
-    }
-    if(!isFullScreen){
+    } else {
       openFullScreen();
-      fullScreenButton.classList.replace("fa-expand", "fa-compress");
-      fullScreenButton.setAttribute("title", "Compress");
     }
     isFullScreen = !isFullScreen;
-  }
+  };
+  const pressKeyboard = (e) => {
+    e.preventDefault();
+    if (e.key === "f" || e.key === "F") {
+      openFullScreen();
+    }
+    if (e.key === "e" || e.key === "E") {
+      closeFullScreen();
+    }
+    if (e.code === "Space") {
+      toggleVideo();
+    }
+    if (e.key === "M" || e.key === "m") {
+      toggleMute();
+    }
+  };
+
+  document.addEventListener("keydown", pressKeyboard);
 
   fullScreenButton.addEventListener("click", toggleFullScreen);
   playButton.addEventListener("click", toggleVideo);
